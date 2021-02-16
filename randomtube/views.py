@@ -24,6 +24,7 @@ def scoped_random():
     order = random.choice(["date", "rating", "relevance", "title"])
     safe_search = random.choice(["strict", "moderate", "none"])
     check_url = 'https://youtube.googleapis.com/youtube/v3/search?safeSearch='+safe_search+'&order='+order+'&maxResults=50&key='+yt_api
+    print(check_url)
     response = requests.get(check_url)
     data = response.json()
     data = data["items"]
