@@ -10,7 +10,10 @@ def home(request):
 
 def output(request):
     v, title, desc = scoped_random()
-    return render(request, 'index.html', {'v': v, 'title': title, 'description': desc})
+    if desc != "error":
+        return render(request, 'index.html', {'v': v, 'title': title, 'description': desc})
+    else:
+        return render(request, 'index.html', {'error': v, 'message': title})
 
 
 def scoped_random():
@@ -24,19 +27,22 @@ def scoped_random():
     order = random.choice(["date", "rating", "relevance", "title"])
     safe_search = random.choice(["strict", "moderate", "none"])
     check_url = 'https://youtube.googleapis.com/youtube/v3/search?safeSearch='+safe_search+'&order='+order+'&maxResults=50&key='+yt_api
-    print(check_url)
     response = requests.get(check_url)
+    print(response.status_code)
     data = response.json()
-    data = data["items"]
-    random_choice = random.randint(0,50)
-    chosen = data[random_choice]
-    v = chosen["id"]["videoId"]
-    check_url = 'https://www.googleapis.com/youtube/v3/videos?id=' + v + '&key=' + yt_api + '&part=snippet'
-    response = requests.get(check_url)
-    data = response.json()
-    title = data["items"][0]["snippet"]["title"]
-    desc = data["items"][0]["snippet"]["description"]
-    return v, title, desc
+    if data["error"]:
+        return data["error"]["code"], data["error"]["message"], 'error'
+    else:
+        data = data["items"]
+        random_choice = random.randint(0,50)
+        chosen = data[random_choice]
+        v = chosen["id"]["videoId"]
+        check_url = 'https://www.googleapis.com/youtube/v3/videos?id=' + v + '&key=' + yt_api + '&part=snippet'
+        response = requests.get(check_url)
+        data = response.json()
+        title = data["items"][0]["snippet"]["title"]
+        desc = data["items"][0]["snippet"]["description"]
+        return v, title, desc
 
 
 def completely_random():

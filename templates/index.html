@@ -65,6 +65,10 @@
     The website that randomly chooses a youtube video for you because scrolling through millions of videos is something you just don't have time for.
 </p>
 <input type="button" class="button" value="Get Video" onclick="location.href='{% url 'script' %}'"><br><br>
+{% if error %}
+<h1 class="video_title">Error Code: {{ error }}</h1>
+<p class="video_desc">{{ message }}</p>
+{% endif %}
 {% if v %}
 <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ v }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 <br>
