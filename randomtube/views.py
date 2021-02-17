@@ -30,7 +30,7 @@ def scoped_random():
     response = requests.get(check_url)
     print(response.status_code)
     data = response.json()
-    if data["error"]:
+    if "error" in data:
         return data["error"]["code"], data["error"]["message"], 'error'
     else:
         data = data["items"]
